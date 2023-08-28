@@ -96,7 +96,7 @@ def vis_detections_filtered_objects(im, obj_dets, hand_dets, thresh=0.8):
 
 
 
-def vis_detections_filtered_objects_PIL(im, obj_dets, hand_dets, thresh_hand=0.8, thresh_obj=0.01, font_path='lib/model/utils/times_b.ttf'):
+def vis_detections_filtered_objects_PIL(im, obj_dets, hand_dets, overlap_bboxes, objs=['left hand', 'right hand'], thresh_hand=0.8, thresh_obj=0.01, font_path='lib/model/utils/times_b.ttf'):
 
     # convert to PIL
     im = im[:,:,::-1]
@@ -132,6 +132,13 @@ def vis_detections_filtered_objects_PIL(im, obj_dets, hand_dets, thresh_hand=0.8
                     elif lr == 1:
                         side_idx = 1
                     draw_line_point(draw, side_idx, (int(hand_cc[0]), int(hand_cc[1])), (int(obj_cc[0]), int(obj_cc[1])))
+        print(overlap_bboxes)
+        for frame in overlap_bboxes.keys():
+            for obj in objs:
+                if obj in overlap_bboxes[frame].keys():
+                    overlap_bbox, xs, ys = overlap_bboxes[frame][obj]['bbox'], overlap_bboxes[frame][obj]['x'], overlap_bboxes[frame][obj]['y']
+                    overlap_bbox = list(int(np.round(x)) for x in overlap_bbox)
+                    draw_overlap_box(image, draw, overlap_bbox, frame, xs, ys, width, height, font)
 
 
         

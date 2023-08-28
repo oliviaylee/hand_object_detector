@@ -55,7 +55,22 @@ def draw_hand_mask(image, draw, hand_idx, hand_bbox, hand_score, side, state, wi
     draw.text((hand_bbox[0]+6, max(0, hand_bbox[1]-30)-2), f'{side_map3[int(float(side))]}-{state_map2[int(float(state))]}', font=font, fill=(0,0,0)) # 
 
     return image
-    
+
+def draw_overlap_box(image, draw, overlap_bbox, label, xs, ys, width, height, font):
+
+    mask = Image.new('RGBA', (width, height))
+    pmask = ImageDraw.Draw(mask)
+    pmask.rectangle(overlap_bbox, outline=overlap_rgb, width=4, fill=overlap_rgba) 
+    image.paste(mask, (0,0), mask)  
+
+    draw.rectangle([overlap_bbox[0], max(0, overlap_bbox[1]-30), overlap_bbox[0]+32, max(0, overlap_bbox[1]-30)+30], fill=(255, 255, 255), outline=overlap_rgb, width=4)
+    draw.text((overlap_bbox[0]+5, max(0, overlap_bbox[1]-30)-2), f'{label}', font=font, fill=(0,0,0)) 
+    r = 5
+    for (x, y) in zip(xs, ys):
+        draw.ellipse((x-r, y-r, x+r, y+r), fill=overlap_rgb)
+
+    return image
+
 def draw_line_point(draw, side_idx, hand_center, object_center):
     
     draw.line([hand_center, object_center], fill=hand_rgb[side_idx], width=4)
@@ -76,6 +91,8 @@ hand_rgba = [(0, 90, 181, 70), (220, 50, 32, 70)]
 obj_rgb = (255, 194, 10)
 obj_rgba = (255, 194, 10, 70)
 
+overlap_rgb = (0, 255, 0)
+overlap_rgba = (0, 255, 0, 70)
 
 side_map = {'l':'Left', 'r':'Right'}
 side_map2 = {0:'Left', 1:'Right'}
