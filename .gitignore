@@ -226,3 +226,9 @@ caffe2.egg-info
 # cython generated files
 lib/model/utils/bbox.c
 lib/pycocotools/_mask.c
+
+*.out
+*.pth
+*.png
+*.json
+VOCdevkit2007_handobj_100K/
